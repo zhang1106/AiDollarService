@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace AiDollar.Edgar.Service
 {
-    public class DataAgent
+    public interface IHttpDataAgent
     {
+         Task<byte[]> DownloadPageAsync(string page);
     }
 }

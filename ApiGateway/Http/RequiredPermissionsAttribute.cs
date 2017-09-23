@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Bam.Compliance.ApiGateway.Http
+namespace AiDollar.ApiGateway.Http
 {
     [AttributeUsage(AttributeTargets.Method)]
     public class RequiredPermissionsAttribute : Attribute

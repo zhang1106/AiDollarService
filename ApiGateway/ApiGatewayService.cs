@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Bam.Compliance.Infrastructure.Hosting;
+using AiDollar.Infrastructure.Hosting;
 
-namespace Bam.Compliance.ApiGateway
+namespace AiDollar.ApiGateway
 {
     public class ApiGatewayService : IService
     {

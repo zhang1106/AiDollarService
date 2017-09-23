@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AiDollar.Gateway
+namespace AiDollar.Edgar.Service
 {
-    class Program
+    public interface IUtil
     {
-        static void Main(string[] args)
-        {
-        }
+        string ToJson(byte[] xml);
+        
     }
 }

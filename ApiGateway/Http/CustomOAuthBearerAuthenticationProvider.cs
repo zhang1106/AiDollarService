@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Owin.Security.OAuth;
 
-namespace Bam.Compliance.ApiGateway.Http
+namespace AiDollar.ApiGateway.Http
 {
     public class CustomOAuthBearerAuthenticationProvider : OAuthBearerAuthenticationProvider
     {

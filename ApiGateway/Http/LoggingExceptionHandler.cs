@@ -1,7 +1,7 @@
 ﻿using System.Web.Http.ExceptionHandling;
-using Bam.Compliance.Infrastructure.Logger;
+using AiDollar.Infrastructure.Logger;
 
-namespace Bam.Compliance.ApiGateway.Http
+namespace AiDollar.ApiGateway.Http
 {
     public class LoggingExceptionHandler : ExceptionHandler
     {

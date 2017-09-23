@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Bam.Compliance.Infrastructure.Logger;
+using AiDollar.Infrastructure.Logger;
 
-namespace Bam.Compliance.ApiGateway.Http.Controller
+namespace AiDollar.ApiGateway.Http.Controller
 {
     public class TestController : ApiController
     {

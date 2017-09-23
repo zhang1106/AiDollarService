@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Bam.Compliance.Infrastructure.Threading;
+using AiDollar.Infrastructure.Threading;
 
-namespace Bam.Compliance.ApiGateway.Cache
+namespace AiDollar.ApiGateway.Cache
 {
     public class Cache<TKey, TValue> : ICache<TKey, TValue>
     {

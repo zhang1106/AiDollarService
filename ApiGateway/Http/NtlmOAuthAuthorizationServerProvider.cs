@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Owin.Security.OAuth;
 
-namespace Bam.Compliance.ApiGateway.Http
+namespace AiDollar.ApiGateway.Http
 {
     public class NtlmOAuthAuthorizationServerProvider : OAuthAuthorizationServerProvider
     {

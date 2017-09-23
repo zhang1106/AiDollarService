@@ -1,8 +1,8 @@
 ﻿using System;
-using Bam.Compliance.ApiGateway.Http;
-using Bam.Compliance.Infrastructure.Configuration;
+using AiDollar.ApiGateway.Http;
+using AiDollar.Infrastructure.Configuration;
 
-namespace Bam.Compliance.ApiGateway
+namespace AiDollar.ApiGateway
 {
     public class ApiGatewaySettings : SettingsBase
     {

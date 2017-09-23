@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using Bam.Compliance.Infrastructure.Logger;
-using Bam.Compliance.Infrastructure.Permissions;
+using AiDollar.Infrastructure.Logger;
+using AiDollar.Infrastructure.Permissions;
 
-namespace Bam.Compliance.ApiGateway.Http
+namespace AiDollar.ApiGateway.Http
 {
     public class AuthorizeFilter : AuthorizeAttribute
     {

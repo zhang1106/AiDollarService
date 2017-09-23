@@ -1,7 +1,7 @@
 ﻿using System;
-using Bam.Compliance.Infrastructure.Configuration;
+using AiDollar.Infrastructure.Configuration;
 
-namespace Bam.Compliance.ApiGateway
+namespace AiDollar.ApiGateway
 {
     public class RabbitMqSettings : AppSettingsBase
     {
