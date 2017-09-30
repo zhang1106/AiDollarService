@@ -33,10 +33,16 @@ namespace AiDollar.Edgar.Service
         public List<InfoTable> infoTable { get; set; }
     }
 
-    public class Holding13F
+    public class HoldingRoot
     {
         public Holding holding { get; set; }
+    }
+
+    public class Holding13F
+    {
+        public List<InfoTable> infoTable { get; set; }
         public DateTime ReportedDate { get; set; }
         public string Cik { get; set; }
+        public string Holder { get; set; }
     }
 }

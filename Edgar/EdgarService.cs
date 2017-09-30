@@ -34,15 +34,30 @@ namespace AiDollar.Edgar.Service
                 {
                     var uri = string.Format(_edgarUri, cik);
                     var doc = _httpDataAgent.DownloadXml(uri);
+               
+                    var json = _util.ToJson(_util.GetSpecialXmlElements("root", new []{"company-info","entry"}, doc));
 
-                    var json = _util.ToJson(_util.GetSpecialXmlElements("root", "entry", doc));
-
-                    var root = JsonConvert.DeserializeObject<EdgarEntry>(json);
+                    _util.WriteToDisk(_outputPath+"entry.json", json);
+                    
+                    var root = JsonConvert.DeserializeObject<RootObject>(json);
                     var entry = root.root.entry.OrderByDescending(e => e.updated).FirstOrDefault();
                     var posIdxPage = entry.content.accession_nunber + "-index.htm";
                     var link = entry.link.href.Replace(posIdxPage, _posPage);
+                    
+
                     var posFile = _outputPath + "holding-" + cik + "-" + entry.content.accession_nunber + ".json";
-                    DownloadLatestPosition(link, posFile);
+                    var jPos = DownloadLatestPosition(link, posFile);
+
+                    var holding = JsonConvert.DeserializeObject<HoldingRoot>(jPos);
+                    var holding13 = new Holding13F()
+                    {
+                        infoTable = holding.holding.infoTable,
+                        Cik = cik,
+                        ReportedDate = entry.updated,
+                        Holder = root.root.company_info.conformed_name
+                    };
+                 
+                    _util.WriteToDisk(posFile, JsonConvert.SerializeObject(holding13));
                 }
                 catch (Exception e)
                 {
@@ -54,13 +69,15 @@ namespace AiDollar.Edgar.Service
             
         }
 
-        public void DownloadLatestPosition(string uri, string output)
+        public string DownloadLatestPosition(string uri, string output)
         {
            
             var doc = _httpDataAgent.DownloadXml(uri);
            
-            var json = _util.ToJson(_util.GetSpecialXmlElements("holding", "infoTable", doc));
-            _util.WriteToDisk(output,json);
+            var json = _util.ToJson(_util.GetSpecialXmlElements("holding", new []{"infoTable"}, doc));
+
+            return json;
+          
         }
 
         public void Stop()

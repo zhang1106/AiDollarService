@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -39,14 +40,16 @@ namespace AiDollar.Edgar.Service
           
         }
 
-        public XDocument GetSpecialXmlElements(string root, string name, XDocument xml)
+        public XDocument GetSpecialXmlElements(string root, IEnumerable<string> names, XDocument xml)
         {
             var ns = xml.Root?.Name.Namespace;
-            var elements = xml.Descendants(ns+name);
-             
             var rootElement = new XElement(root);
             var xdoc = new XDocument(rootElement);
-            xdoc.Root?.Add(elements);
+            foreach (var tag in names)
+            {
+                var elements = xml.Descendants(ns + tag);
+                xdoc.Root?.Add(elements);
+            }
 
             var des = xdoc.Descendants();
             foreach (var d in des)
