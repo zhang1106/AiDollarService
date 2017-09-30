@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AiDollar.Infrastructure.Hosting;
+﻿using AiDollar.Infrastructure.Hosting;
 using AiDollar.Infrastructure.Logger;
 using AiDollar.Infrastructure.Threading;
 using StructureMap;
@@ -25,6 +20,15 @@ namespace AiDollar.Edgar.Service
                     ConfigureLogger(config, settings);
 
                     config.For<IHttpDataAgent>().Use<HttpDataAgent>();
+
+                    config.For<IUtil>().Use<Util>();
+
+                    config.For<IService>().Use<EdgarService>()
+                        .Ctor<string[]>("ciks").Is(settings.Ciks)
+                        .Ctor<string>("edgarUri").Is(settings.EdgarArchiveRoot)
+                        .Ctor<string>("outputPath").Is(settings.DataPath)
+                        .Ctor<string>("posPage").Is(settings.PosPage);
+
 
                 }
             );

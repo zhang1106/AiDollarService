@@ -52,7 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompositionRoot.cs" />
+    <Compile Include="EdgarEntry.cs" />
     <Compile Include="EdgarService.cs" />
+    <Compile Include="Holding.cs" />
     <Compile Include="HttpDataAgent.cs" />
     <Compile Include="EdgarSettings.cs" />
     <Compile Include="IHttpDataAgent.cs" />
