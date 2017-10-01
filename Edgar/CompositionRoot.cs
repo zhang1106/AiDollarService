@@ -1,4 +1,5 @@
-﻿using AiDollar.Infrastructure.Hosting;
+﻿using AiDollar.Infrastructure.Database;
+using AiDollar.Infrastructure.Hosting;
 using AiDollar.Infrastructure.Logger;
 using AiDollar.Infrastructure.Threading;
 using StructureMap;
@@ -23,11 +24,16 @@ namespace AiDollar.Edgar.Service
 
                     config.For<IUtil>().Use<Util>();
 
+                    config.For<IDbOperation>().Use<MongoDbOperation>()
+                    .Ctor<string>("connectionString").Is(settings.AiDollarMongo)
+                    .Ctor<string>("database").Is(settings.AiDollarDb);
+
                     config.For<IService>().Use<EdgarService>()
                         .Ctor<string[]>("ciks").Is(settings.Ciks)
                         .Ctor<string>("edgarUri").Is(settings.EdgarArchiveRoot)
                         .Ctor<string>("outputPath").Is(settings.DataPath)
                         .Ctor<string>("posPage").Is(settings.PosPage);
+
 
 
                 }

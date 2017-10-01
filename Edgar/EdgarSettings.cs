@@ -8,7 +8,8 @@ namespace AiDollar.Edgar.Service
         public string EdgarArchiveRoot { get { return GetValue(() => EdgarArchiveRoot); } }
         public string DataPath { get { return GetValue(() => DataPath); } }
         public string PosPage { get { return GetValue(() => PosPage); } }
+        public string AiDollarMongo { get { return GetValue(() => AiDollarMongo); } }
+        public string AiDollarDb { get { return GetValue(() => AiDollarDb); } }
 
-        
     }
 }

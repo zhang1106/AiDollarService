@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AiDollar.Infrastructure.Database;
 using AiDollar.Infrastructure.Hosting;
 using Newtonsoft.Json;
+using System;
+using System.Linq;
 
 namespace AiDollar.Edgar.Service
 {
@@ -15,8 +14,9 @@ namespace AiDollar.Edgar.Service
         private readonly string _edgarUri;
         private readonly string _outputPath;
         private readonly string _posPage;
+        private readonly IDbOperation _dbOperation;
 
-        public EdgarService(IHttpDataAgent httpDataAgent, IUtil util, string[] ciks, string edgarUri, string posPage, 
+        public EdgarService(IHttpDataAgent httpDataAgent, IUtil util, IDbOperation dbOperation, string[] ciks, string edgarUri, string posPage, 
             string outputPath)
         {
             _httpDataAgent = httpDataAgent;
@@ -25,6 +25,7 @@ namespace AiDollar.Edgar.Service
             _ciks = ciks;
             _outputPath = outputPath;
             _posPage = posPage;
+            _dbOperation = dbOperation;
         }
         public void Start()
         {
@@ -37,8 +38,7 @@ namespace AiDollar.Edgar.Service
                
                     var json = _util.ToJson(_util.GetSpecialXmlElements("root", new []{"company-info","entry"}, doc));
 
-                    _util.WriteToDisk(_outputPath+"entry.json", json);
-                    
+                 
                     var root = JsonConvert.DeserializeObject<RootObject>(json);
                     var entry = root.root.entry.OrderByDescending(e => e.updated).FirstOrDefault();
                     var posIdxPage = entry.content.accession_nunber + "-index.htm";
@@ -56,6 +56,8 @@ namespace AiDollar.Edgar.Service
                         ReportedDate = entry.updated,
                         Holder = root.root.company_info.conformed_name
                     };
+
+                    _dbOperation.SaveItems(new[] {holding13}, "Portfolio");
                  
                     _util.WriteToDisk(posFile, JsonConvert.SerializeObject(holding13));
                 }
