@@ -1,13 +1,11 @@
-﻿using System;
+﻿using AiDollar.Infrastructure.Logger;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using AiDollar.Infrastructure.Logger;
-using Newtonsoft.Json;
-using Formatting = Newtonsoft.Json.Formatting;
 
 namespace AiDollar.Edgar.Service
 {
@@ -32,14 +30,6 @@ namespace AiDollar.Edgar.Service
             return json;
         }
 
-        public string GetSpecialXmlElements(string root, string name, string xml)
-        {
-            var  doc = XDocument.Parse(xml);
-            var elements = doc.Descendants(name);
-            return  $"<{root}>{string.Join("", elements.Select(e=>e.ToString()))}</{root}>";
-          
-        }
-
         public XDocument GetSpecialXmlElements(string root, IEnumerable<string> names, XDocument xml)
         {
             var ns = xml.Root?.Name.Namespace;
@@ -60,11 +50,7 @@ namespace AiDollar.Edgar.Service
             return xdoc;
         }
 
-        public string ConvertNReplace(byte[] ary)
-        {
-            var str = System.Text.Encoding.Default.GetString(ary);
-            return str.Replace("@", "__");
-        }
+       
 
         public void WriteToDisk(string path, string data)
         {

@@ -45,8 +45,7 @@ namespace AiDollar.Edgar.Service
                         var posIdxPage = entry.content.accession_nunber + "-index.htm";
                         var link = entry.link.href.Replace(posIdxPage, _posPage);
 
-                        var posFile = _outputPath + "holding-" + cik + "-" + entry.content.accession_nunber + ".json";
-                        var jPos = DownloadLatestPosition(link, posFile);
+                        var jPos = DownloadLatestPosition(link);
 
                         var holding = JsonConvert.DeserializeObject<HoldingRoot>(jPos);
                         var holding13 = new Portfolio()
@@ -60,9 +59,7 @@ namespace AiDollar.Edgar.Service
 
                         if (!ReportExists(holding13))
                             _dbOperation.SaveItems(new[] { holding13 }, "Portfolio");
-
-                        _util.WriteToDisk(posFile, JsonConvert.SerializeObject(holding13));
-                    }
+                     }
                  
                 }
                 catch (Exception e)
@@ -82,7 +79,7 @@ namespace AiDollar.Edgar.Service
             return portfolios.Any();
         }
 
-        public string DownloadLatestPosition(string uri, string output)
+        public string DownloadLatestPosition(string uri)
         {
            
             var doc = _httpDataAgent.DownloadXml(uri);

@@ -17,17 +17,7 @@ namespace AiDollar.UnitTest
             var json = util.ToJson(xml);
             Assert.IsTrue(json=="{\"test\":\"data\"}");
         }
-        [Test]
-        public void TestXmlQuery()
-        {
-            const string xml = @"<tests><test><t1>data</t1></test><test><t1>data</t1></test><test1>data</test1></tests>";
-            var util = new Util();
-            var sXml = util.GetSpecialXmlElements("root", "test", xml);
-            Assert.IsTrue(sXml == "<root><test><t1>data</t1></test><test><t1>data</t1></test></root>");
-
-            //var json = util.ToJson(sXml);
-            //Assert.IsTrue(json == "{\"root\":{\"test\":[\"data\",\"data\"]}}");
-        }
+      
 
         [Test]
         public void TestXDocQuery()
