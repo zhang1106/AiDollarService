@@ -49,7 +49,7 @@ namespace AiDollar.Edgar.Service
                     var jPos = DownloadLatestPosition(link, posFile);
 
                     var holding = JsonConvert.DeserializeObject<HoldingRoot>(jPos);
-                    var holding13 = new Holding13F()
+                    var holding13 = new Portfolio()
                     {
                         infoTable = holding.holding.infoTable,
                         Cik = cik,

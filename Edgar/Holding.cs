@@ -38,7 +38,7 @@ namespace AiDollar.Edgar.Service
         public Holding holding { get; set; }
     }
 
-    public class Holding13F
+    public class Portfolio
     {
         public List<InfoTable> infoTable { get; set; }
         public DateTime ReportedDate { get; set; }
