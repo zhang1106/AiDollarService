@@ -37,31 +37,33 @@ namespace AiDollar.Edgar.Service
                     var doc = _httpDataAgent.DownloadXml(uri);
                
                     var json = _util.ToJson(_util.GetSpecialXmlElements("root", new []{"company-info","entry"}, doc));
-
                  
                     var root = JsonConvert.DeserializeObject<RootObject>(json);
-                    var entry = root.root.entry.OrderByDescending(e => e.updated).FirstOrDefault();
-                    var posIdxPage = entry.content.accession_nunber + "-index.htm";
-                    var link = entry.link.href.Replace(posIdxPage, _posPage);
-                    
 
-                    var posFile = _outputPath + "holding-" + cik + "-" + entry.content.accession_nunber + ".json";
-                    var jPos = DownloadLatestPosition(link, posFile);
-
-                    var holding = JsonConvert.DeserializeObject<HoldingRoot>(jPos);
-                    var holding13 = new Portfolio()
+                    foreach (var entry in root.root.entry)
                     {
-                        infoTable = holding.holding.infoTable,
-                        Cik = cik,
-                        ReportedDate = entry.updated,
-                        Holder = root.root.company_info.conformed_name,
-                        _id = entry.content.accession_nunber
-                    };
+                        var posIdxPage = entry.content.accession_nunber + "-index.htm";
+                        var link = entry.link.href.Replace(posIdxPage, _posPage);
 
-                    if(!ReportExists(holding13))
-                        _dbOperation.SaveItems(new[] {holding13}, "Portfolio");
+                        var posFile = _outputPath + "holding-" + cik + "-" + entry.content.accession_nunber + ".json";
+                        var jPos = DownloadLatestPosition(link, posFile);
+
+                        var holding = JsonConvert.DeserializeObject<HoldingRoot>(jPos);
+                        var holding13 = new Portfolio()
+                        {
+                            infoTable = holding.holding.infoTable,
+                            Cik = cik,
+                            ReportedDate = entry.updated,
+                            Holder = root.root.company_info.conformed_name,
+                            _id = entry.content.accession_nunber
+                        };
+
+                        if (!ReportExists(holding13))
+                            _dbOperation.SaveItems(new[] { holding13 }, "Portfolio");
+
+                        _util.WriteToDisk(posFile, JsonConvert.SerializeObject(holding13));
+                    }
                  
-                    _util.WriteToDisk(posFile, JsonConvert.SerializeObject(holding13));
                 }
                 catch (Exception e)
                 {

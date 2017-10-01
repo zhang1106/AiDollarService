@@ -25,8 +25,6 @@ namespace AiDollar.UnitTest
             var holding = JsonConvert.DeserializeObject<HoldingRoot>(json);
 
             db.SaveItems(new[]{holding}, "Portfolio");
-
-             
         }
 
         [Test]
@@ -34,7 +32,6 @@ namespace AiDollar.UnitTest
         {
             var db = new MongoDbOperation("mongodb://localhost:27017", "AiDollar");
             var port = db.Database.GetCollection<Portfolio>("Portfolio");
-            // var ports = port.AsQueryable().Where(p=>p.Cik == "0001067983").ToList();
             var ports = port.Find("{'Cik':'0001067983'}").ToList();
 
 
