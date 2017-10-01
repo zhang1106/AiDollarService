@@ -54,10 +54,12 @@ namespace AiDollar.Edgar.Service
                         infoTable = holding.holding.infoTable,
                         Cik = cik,
                         ReportedDate = entry.updated,
-                        Holder = root.root.company_info.conformed_name
+                        Holder = root.root.company_info.conformed_name,
+                        _id = entry.content.accession_nunber
                     };
 
-                    _dbOperation.SaveItems(new[] {holding13}, "Portfolio");
+                    if(!ReportExists(holding13))
+                        _dbOperation.SaveItems(new[] {holding13}, "Portfolio");
                  
                     _util.WriteToDisk(posFile, JsonConvert.SerializeObject(holding13));
                 }
@@ -69,6 +71,13 @@ namespace AiDollar.Edgar.Service
                
             }
             
+        }
+
+        private bool ReportExists(Portfolio portfolio)
+        {
+            var query = $"{{'_id':'{portfolio._id}'}}";
+            var portfolios = _dbOperation.Select<Portfolio>(query);
+            return portfolios.Any();
         }
 
         public string DownloadLatestPosition(string uri, string output)

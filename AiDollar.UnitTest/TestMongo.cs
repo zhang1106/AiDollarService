@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AiDollar.Edgar.Service;
 using AiDollar.Infrastructure.Database;
+using MongoDB.Driver;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
@@ -24,6 +25,19 @@ namespace AiDollar.UnitTest
             var holding = JsonConvert.DeserializeObject<HoldingRoot>(json);
 
             db.SaveItems(new[]{holding}, "Portfolio");
+
+             
+        }
+
+        [Test]
+        public void TestRead()
+        {
+            var db = new MongoDbOperation("mongodb://localhost:27017", "AiDollar");
+            var port = db.Database.GetCollection<Portfolio>("Portfolio");
+            // var ports = port.AsQueryable().Where(p=>p.Cik == "0001067983").ToList();
+            var ports = port.Find("{'Cik':'0001067983'}").ToList();
+
+
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace AiDollar.Edgar.Service
 {
@@ -40,6 +41,7 @@ namespace AiDollar.Edgar.Service
 
     public class Portfolio
     {
+        public object _id { get; set; }
         public List<InfoTable> infoTable { get; set; }
         public DateTime ReportedDate { get; set; }
         public string Cik { get; set; }
