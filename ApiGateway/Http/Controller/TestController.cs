@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Http;
+﻿using System.Web.Http;
 using AiDollar.Infrastructure.Logger;
 
 namespace AiDollar.ApiGateway.Http.Controller
@@ -12,7 +7,7 @@ namespace AiDollar.ApiGateway.Http.Controller
     {
         public TestController()
         {
-            Logger.Log(LogLevel.Information, "Test Controller started");
+          
         }
         public ILogger Logger { get; set; }
 

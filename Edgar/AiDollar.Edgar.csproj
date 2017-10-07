@@ -52,11 +52,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompositionRoot.cs" />
+    <Compile Include="EdgarApi.cs" />
     <Compile Include="EdgarEntry.cs" />
     <Compile Include="EdgarService.cs" />
     <Compile Include="Holding.cs" />
     <Compile Include="HttpDataAgent.cs" />
     <Compile Include="EdgarSettings.cs" />
+    <Compile Include="IEdgarApi.cs" />
     <Compile Include="IHttpDataAgent.cs" />
     <Compile Include="IUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

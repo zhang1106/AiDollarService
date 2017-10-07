@@ -34,6 +34,8 @@ namespace AiDollar.UnitTest
             var port = db.Database.GetCollection<Portfolio>("Portfolio");
             var ports = port.Find("{'Cik':'0001067983'}").ToList();
 
+            var dPorts = db.Select<Portfolio>("{'Cik':'0001067983'}");
+
 
         }
 

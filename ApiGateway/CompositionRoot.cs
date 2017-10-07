@@ -9,6 +9,8 @@ using AiDollar.Infrastructure.Threading;
 using AiDollar.Infrastructure.Wcf.PermissionService;
 using StructureMap;
 using System.Web.Http.Dependencies;
+using AiDollar.ApiGateway.Http.Controller;
+using AiDollar.Edgar.Service;
 
 namespace AiDollar.ApiGateway
 {
@@ -17,7 +19,7 @@ namespace AiDollar.ApiGateway
         private readonly IContainer _container;
         private readonly ApiGatewaySettings _settings;
 
-        public static CompositionRoot SvcComposite;
+        protected static CompositionRoot SvcComposite;
 
         public static CompositionRoot CompositeRootInstanace()
         {
@@ -32,8 +34,10 @@ namespace AiDollar.ApiGateway
                     {
                         ConfigureLogger(config, _settings);
                         ConfigureRest(config, _settings);
-                        ConfigureAuthorization(config, _settings);
+                        var sRoot = Edgar.Service.CompositionRoot.CompositeRootInstanace();
+                        config.For<IEdgarApi>().Use(sRoot.GetInstance<IEdgarApi>());
                     }
+                   
                 );
 
             _container.Inject(typeof(IDependencyResolver), new StructureMapDependencyResolver(_container));
@@ -41,7 +45,7 @@ namespace AiDollar.ApiGateway
 
         protected virtual void ConfigureLogger(ConfigurationExpression config, ApiGatewaySettings settings)
         {
-            var logger = new Log4NetLogger(settings.LogPath, settings.LogFilename, settings.LogArchivePath);
+            var logger = BackgroundWorkerFactory.Logger ?? new Log4NetLogger(settings.LogPath, settings.LogFilename, settings.LogArchivePath);
             config.For<ILogger>().Use(logger);
             config.Policies.FillAllPropertiesOfType<ILogger>();
             BackgroundWorkerFactory.Logger = logger;
@@ -65,11 +69,8 @@ namespace AiDollar.ApiGateway
                .Ctor<IService>("httpService").Is(ctx => ctx.GetInstance<IService>(nameof(HttpService)));
 
             //controllers
-            config.ForConcreteType<Http.Controller.PermissionController>()
-                .Configure
-                .Ctor<string[]>().Is(settings.PermissionedApplications);
+            config.ForConcreteType<Http.Controller.TestController>();
 
-            
         }
 
         protected virtual void ConfigureAuthorization(ConfigurationExpression config, ApiGatewaySettings settings, TimeSpan permissionRefresh = default(TimeSpan))

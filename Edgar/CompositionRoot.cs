@@ -3,6 +3,7 @@ using AiDollar.Infrastructure.Hosting;
 using AiDollar.Infrastructure.Logger;
 using AiDollar.Infrastructure.Threading;
 using StructureMap;
+using StructureMap.Building;
 
 namespace AiDollar.Edgar.Service
 {
@@ -10,7 +11,7 @@ namespace AiDollar.Edgar.Service
     {
         private readonly IContainer _container;
         
-        public static CompositionRoot SvcComposite;
+        protected static CompositionRoot SvcComposite;
 
         public CompositionRoot()
         {
@@ -24,6 +25,10 @@ namespace AiDollar.Edgar.Service
 
                     config.For<IUtil>().Use<Util>();
 
+                    config.For<IEdgarApi>().Use<EdgarApi>()
+                        .Ctor<string>("connectionString").Is(settings.AiDollarMongo)
+                        .Ctor<string>("database").Is(settings.AiDollarDb);
+
                     config.For<IDbOperation>().Use<MongoDbOperation>()
                     .Ctor<string>("connectionString").Is(settings.AiDollarMongo)
                     .Ctor<string>("database").Is(settings.AiDollarDb);
@@ -34,7 +39,7 @@ namespace AiDollar.Edgar.Service
                         .Ctor<string>("outputPath").Is(settings.DataPath)
                         .Ctor<string>("posPage").Is(settings.PosPage);
 
-
+                   
 
                 }
             );
@@ -43,10 +48,15 @@ namespace AiDollar.Edgar.Service
 
         protected virtual void ConfigureLogger(ConfigurationExpression config, EdgarSettings settings)
         {
-            var logger = new Log4NetLogger(settings.LogPath, settings.LogFilename, settings.LogArchivePath);
+            var logger = BackgroundWorkerFactory.Logger ?? new Log4NetLogger(settings.LogPath, settings.LogFilename, settings.LogArchivePath);
             config.For<ILogger>().Use(logger);
             config.Policies.FillAllPropertiesOfType<ILogger>();
             BackgroundWorkerFactory.Logger = logger;
+        }
+
+        public T GetInstance<T>()
+        {
+            return _container.GetInstance<T>();
         }
 
         public static CompositionRoot CompositeRootInstanace()

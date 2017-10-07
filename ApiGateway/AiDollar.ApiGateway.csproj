@@ -201,7 +201,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Http\AuthorizeFilter.cs" />
-    <Compile Include="Http\Controller\PermissionController.cs" />
+    <Compile Include="Http\Controller\PortfolioController.cs" />
     <Compile Include="Http\Controller\TestController.cs" />
     <Compile Include="Http\CustomOAuthBearerAuthenticationProvider.cs" />
     <Compile Include="Http\NtlmOAuthAuthorizationServerProvider.cs" />
@@ -231,6 +231,10 @@
     <EmbeddedResource Include="Http\Views\Token.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Edgar\AiDollar.Edgar.csproj">
+      <Project>{c12c83dc-373a-4bda-b7fb-2a39613ae7e5}</Project>
+      <Name>AiDollar.Edgar</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Infrastructure\AiDollar.Infrastructure.csproj">
       <Project>{02af1602-3b71-4127-aaa3-fa22ee832c78}</Project>
       <Name>AiDollar.Infrastructure</Name>

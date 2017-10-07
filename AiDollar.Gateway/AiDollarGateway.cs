@@ -36,9 +36,12 @@ namespace AiDollar.Gateway
 
         protected override void OnStart(string[] args)
         {
-            var root = Edgar.Service.CompositionRoot.CompositeRootInstanace();
-            var svc = root.Initialize();
-            svc.Start();
+            //var root = Edgar.Service.CompositionRoot.CompositeRootInstanace();
+            //var svc = root.Initialize();
+            //svc.Start();
+            var httpRoot = AiDollar.ApiGateway.CompositionRoot.CompositeRootInstanace();
+            var httpSvc = httpRoot.Initialize();
+            httpSvc.Start();
         }
 
         protected override void OnStop()
