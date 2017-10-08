@@ -3,6 +3,7 @@ using AiDollar.Infrastructure.Hosting;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
+using System.Threading;
 
 namespace AiDollar.Edgar.Service
 {
@@ -29,47 +30,51 @@ namespace AiDollar.Edgar.Service
         }
         public void Start()
         {
-            foreach (var cik in _ciks)
+            while (true)
             {
-                try
+                foreach (var cik in _ciks)
                 {
-                    var uri = string.Format(_edgarUri, cik);
-                    var doc = _httpDataAgent.DownloadXml(uri);
-               
-                    var json = _util.ToJson(_util.GetSpecialXmlElements("root", new []{"company-info","entry"}, doc));
-                 
-                    var root = JsonConvert.DeserializeObject<RootObject>(json);
-
-                    foreach (var entry in root.root.entry)
+                    try
                     {
-                        var posIdxPage = entry.content.accession_nunber + "-index.htm";
-                        var link = entry.link.href.Replace(posIdxPage, _posPage);
+                        var uri = string.Format(_edgarUri, cik);
+                        var doc = _httpDataAgent.DownloadXml(uri);
 
-                        var jPos = DownloadLatestPosition(link);
+                        var json = _util.ToJson(
+                            _util.GetSpecialXmlElements("root", new[] {"company-info", "entry"}, doc));
 
-                        var holding = JsonConvert.DeserializeObject<HoldingRoot>(jPos);
-                        var holding13 = new Portfolio()
+                        var root = JsonConvert.DeserializeObject<RootObject>(json);
+
+                        foreach (var entry in root.root.entry)
                         {
-                            infoTable = holding.holding.infoTable,
-                            Cik = cik,
-                            ReportedDate = entry.updated,
-                            Holder = root.root.company_info.conformed_name,
-                            _id = entry.content.accession_nunber
-                        };
+                            var posIdxPage = entry.content.accession_nunber + "-index.htm";
+                            var link = entry.link.href.Replace(posIdxPage, _posPage);
 
-                        if (!ReportExists(holding13))
-                            _dbOperation.SaveItems(new[] { holding13 }, "Portfolio");
-                     }
-                 
+                            var jPos = DownloadLatestPosition(link);
+
+                            var holding = JsonConvert.DeserializeObject<HoldingRoot>(jPos);
+                            var holding13 = new Portfolio()
+                            {
+                                infoTable = holding.holding.infoTable,
+                                Cik = cik,
+                                ReportedDate = entry.updated,
+                                Holder = root.root.company_info.conformed_name,
+                                _id = entry.content.accession_nunber
+                            };
+
+                            if (!ReportExists(holding13))
+                                _dbOperation.SaveItems(new[] {holding13}, "Portfolio");
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        throw;
+                    }
+
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
-               
+                Thread.Sleep(60 * 60 * 1000);
             }
-            
         }
 
         private bool ReportExists(Portfolio portfolio)

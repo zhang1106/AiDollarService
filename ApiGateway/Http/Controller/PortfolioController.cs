@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
 using AiDollar.Edgar.Service;
+using Bam.Compliance.ApiGateway.Models;
+using Bam.Compliance.ApiGateway.Services;
 
 namespace Bam.Compliance.ApiGateway.Http.Controller
 {
     public class PortfolioController:ApiController
     {
-        private readonly IEdgarApi _edgarApi;
-
-        public PortfolioController(IEdgarApi edgarApi)
+        private readonly IAiPortfolioSvc _aiPortfolioSvc;
+        public PortfolioController(IAiPortfolioSvc aiPortfolioSvc)
         {
-            _edgarApi = edgarApi;
+            _aiPortfolioSvc = aiPortfolioSvc;
         }
 
         [AllowAnonymous]
@@ -22,9 +23,9 @@ namespace Bam.Compliance.ApiGateway.Http.Controller
 
         [AllowAnonymous]
         [HttpGet]
-        public IList<Portfolio> GetPortfolios(string cik)
+        public IList<AiPortfolio> GetPortfolios(string cik)
         {
-            return _edgarApi.GetPortfolios(cik);
+            return _aiPortfolioSvc.GetPortfolios(cik);
         }
     }
 }

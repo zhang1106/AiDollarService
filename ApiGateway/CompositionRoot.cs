@@ -9,8 +9,8 @@ using AiDollar.Infrastructure.Threading;
 using AiDollar.Infrastructure.Wcf.PermissionService;
 using StructureMap;
 using System.Web.Http.Dependencies;
-using AiDollar.ApiGateway.Http.Controller;
 using AiDollar.Edgar.Service;
+using Bam.Compliance.ApiGateway.Services;
 
 namespace AiDollar.ApiGateway
 {
@@ -36,8 +36,8 @@ namespace AiDollar.ApiGateway
                         ConfigureRest(config, _settings);
                         var sRoot = Edgar.Service.CompositionRoot.CompositeRootInstanace();
                         config.For<IEdgarApi>().Use(sRoot.GetInstance<IEdgarApi>());
+                        config.For<IAiPortfolioSvc>().Use<AiPortfolioSvc>();
                     }
-                   
                 );
 
             _container.Inject(typeof(IDependencyResolver), new StructureMapDependencyResolver(_container));
