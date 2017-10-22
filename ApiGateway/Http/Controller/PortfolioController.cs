@@ -23,9 +23,9 @@ namespace Bam.Compliance.ApiGateway.Http.Controller
 
         [AllowAnonymous]
         [HttpGet]
-        public IList<AiPortfolio> GetPortfolios(string cik)
+        public AiPortfolio GetPortfolio(string cik)
         {
-            return _aiPortfolioSvc.GetPortfolios(cik);
+            return _aiPortfolioSvc.GetPortfolio(cik);
         }
     }
 }
