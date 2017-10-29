@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.ServiceModel;
 using AiDollar.Edgar.Service;
+using AiDollar.Edgar.Service.Model;
 using Bam.Compliance.ApiGateway.Models;
 
 namespace Bam.Compliance.ApiGateway.Services
@@ -10,16 +10,24 @@ namespace Bam.Compliance.ApiGateway.Services
     public class AiPortfolioSvc:IAiPortfolioSvc
     {
         private readonly IEdgarApi _edgarApi;
+        private readonly ILookup<string, Security> _securities;
 
         public AiPortfolioSvc(IEdgarApi edgarApi)
         {
             _edgarApi = edgarApi;
+            _securities = _edgarApi.GetSecurities().ToLookup(s=>s.GetCusip(), s=>s);
         }
+
+        public Security GetSecurity(string cusip)
+        {
+            return _securities.Contains(cusip)? _securities[cusip].OrderBy(s=>s.Ticker.Length).FirstOrDefault():null;
+        }
+
         public AiPortfolio GetPortfolio(string cik)
         {
             var portfolios = _edgarApi.GetPortfolios(cik);
             var entries = portfolios.SelectMany(p => 
-                p.infoTable.GroupBy(g=>g.nameOfIssuer).Select(g=>new { p.ReportedDate, Issuer = g.Key,
+                p.infoTable.GroupBy(g=>new{g.cusip, g.nameOfIssuer}).Select(g=>new { p.ReportedDate, cusip = g.Key,
                     Shares = g.Sum(i=>long.Parse(i.shrsOrPrnAmt.sshPrnamt))}))
             ;
             var dates = entries.Select(e => e.ReportedDate).Distinct().OrderByDescending(d=>d).ToList();
@@ -34,12 +42,14 @@ namespace Bam.Compliance.ApiGateway.Services
              };
 
             var aiPort = from e in entries
-                group e by new {e.Issuer}
+                group e by new {e.cusip}
                 into g
                 let h = g.OrderByDescending(a => a.ReportedDate).Select(k => k.Shares).ToList()
                 select new AiHolding()
                 {
-                    Issuer = g.Key.Issuer,
+                    Ticker = GetSecurity(g.Key.cusip.cusip)?.Ticker,
+                    Issuer = g.Key.cusip.nameOfIssuer,
+                    Cusip = g.Key.cusip.cusip,
                     Share0 = h.Count > 4 ? h[4] : 0,
                     Share1 = h.Count > 3 ? h[3] : 0,
                     Share2 = h.Count > 2 ? h[2] : 0,

@@ -61,6 +61,7 @@
     <Compile Include="IEdgarApi.cs" />
     <Compile Include="IHttpDataAgent.cs" />
     <Compile Include="IUtil.cs" />
+    <Compile Include="Model\Security.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>

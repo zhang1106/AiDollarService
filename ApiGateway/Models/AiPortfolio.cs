@@ -17,6 +17,8 @@ namespace Bam.Compliance.ApiGateway.Models
     public struct AiHolding
     {
         public string Issuer { get; set; }
+        public string Ticker { get; set; }
+        public string Cusip { get; set; }
         public long Share0 { get; set; }
         public long Share1 { get; set; }
         public long Share2 { get; set; }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AiDollar.Edgar.Service;
+using AiDollar.Edgar.Service.Model;
 using AiDollar.Infrastructure.Database;
 using MongoDB.Driver;
 using Newtonsoft.Json;
@@ -35,9 +36,26 @@ namespace AiDollar.UnitTest
             var ports = port.Find("{'Cik':'0001067983'}").ToList();
 
             var dPorts = db.Select<Portfolio>("{'Cik':'0001067983'}");
+        }
 
+        [Test]
+        public void TestSecurityRead()
+        {
+            var db = new MongoDbOperation("mongodb://localhost:27017", "AiDollar");
+            var c = db.Database.GetCollection<Security>("Security");
+             
+            var ports = db.Select<Security>("{'Ticker':{$ne:'*'}}").ToList();
 
         }
 
+        [Test]
+        public void TestCusip()
+        {
+            var s = new Security()
+            {
+                Isin = "US01023E1001"
+            };
+            Assert.IsTrue(s.GetCusip()== "01023E100");
+        }
     }
 }
