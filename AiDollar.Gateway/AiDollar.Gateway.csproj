@@ -32,8 +32,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.3.1.0\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,11 +49,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="AiDollarGateway.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="AiDollarGateway.Designer.cs">
+      <DependentUpon>AiDollarGateway.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ApiGateway\AiDollar.ApiGateway.csproj">
+      <Project>{1317ea69-ab62-4033-b4c3-3997c0a546ad}</Project>
+      <Name>AiDollar.ApiGateway</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Edgar\AiDollar.Edgar.csproj">
+      <Project>{c12c83dc-373a-4bda-b7fb-2a39613ae7e5}</Project>
+      <Name>AiDollar.Edgar</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infrastructure\AiDollar.Infrastructure.csproj">
+      <Project>{02af1602-3b71-4127-aaa3-fa22ee832c78}</Project>
+      <Name>AiDollar.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

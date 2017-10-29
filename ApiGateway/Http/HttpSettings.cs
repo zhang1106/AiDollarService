@@ -1,7 +1,7 @@
 ﻿using System;
-using Bam.Compliance.Infrastructure.Configuration;
+using AiDollar.Infrastructure.Configuration;
 
-namespace Bam.Compliance.ApiGateway.Http
+namespace AiDollar.ApiGateway.Http
 {
     public class HttpSettings : AppSettingsBase
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Bam.Compliance.ApiGateway.Cache
+namespace AiDollar.ApiGateway.Cache
 {
     public interface ICache<in TKey, TValue>
     {

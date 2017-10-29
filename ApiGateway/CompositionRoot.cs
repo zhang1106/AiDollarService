@@ -1,26 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Bam.Compliance.Infrastructure.Hosting;
-using Bam.Compliance.ApiGateway.Http;
-using Bam.Compliance.Infrastructure.Logger;
-using Bam.Compliance.Infrastructure.Permissions;
-using Bam.Compliance.Infrastructure.Threading;
-using Bam.Compliance.Infrastructure.Wcf.PermissionService;
+using AiDollar.Infrastructure.Hosting;
+using AiDollar.ApiGateway.Http;
+using AiDollar.Infrastructure.Logger;
+using AiDollar.Infrastructure.Permissions;
+using AiDollar.Infrastructure.Threading;
+using AiDollar.Infrastructure.Wcf.PermissionService;
 using StructureMap;
 using System.Web.Http.Dependencies;
+using AiDollar.Edgar.Service;
 using Bam.Compliance.ApiGateway.Services;
-using Bam.Oms.Compliance;
-using Bam.Oms.Compliance.Services;
 
-namespace Bam.Compliance.ApiGateway
+namespace AiDollar.ApiGateway
 {
     public class CompositionRoot : ICompositionRoot<IService>
     {
         private readonly IContainer _container;
         private readonly ApiGatewaySettings _settings;
 
-        public static CompositionRoot SvcComposite;
+        protected static CompositionRoot SvcComposite;
 
         public static CompositionRoot CompositeRootInstanace()
         {
@@ -35,7 +34,9 @@ namespace Bam.Compliance.ApiGateway
                     {
                         ConfigureLogger(config, _settings);
                         ConfigureRest(config, _settings);
-                        ConfigureAuthorization(config, _settings);
+                        var sRoot = Edgar.Service.CompositionRoot.CompositeRootInstanace();
+                        config.For<IEdgarApi>().Use(sRoot.GetInstance<IEdgarApi>());
+                        config.For<IAiPortfolioSvc>().Use<AiPortfolioSvc>();
                     }
                 );
 
@@ -44,7 +45,7 @@ namespace Bam.Compliance.ApiGateway
 
         protected virtual void ConfigureLogger(ConfigurationExpression config, ApiGatewaySettings settings)
         {
-            var logger = new Log4NetLogger(settings.LogPath, settings.LogFilename, settings.LogArchivePath);
+            var logger = BackgroundWorkerFactory.Logger ?? new Log4NetLogger(settings.LogPath, settings.LogFilename, settings.LogArchivePath);
             config.For<ILogger>().Use(logger);
             config.Policies.FillAllPropertiesOfType<ILogger>();
             BackgroundWorkerFactory.Logger = logger;
@@ -68,24 +69,8 @@ namespace Bam.Compliance.ApiGateway
                .Ctor<IService>("httpService").Is(ctx => ctx.GetInstance<IService>(nameof(HttpService)));
 
             //controllers
-            config.ForConcreteType<Http.Controller.PermissionController>()
-                .Configure
-                .Ctor<string[]>().Is(settings.PermissionedApplications);
+            config.ForConcreteType<Http.Controller.TestController>();
 
-            config.For<IHistoricTradeRetriever>().Add<HistoricTradeRetriever>()
-                .Ctor<string>().Is(settings.BamCoreLite);
-
-            config.For<IIntradayAggrRetriever>().Add<IntradayAggrRetriever>()
-               .Ctor<IEnumerable<string>>().Is(settings.OmsServiceUris);
-           
-            config.For<IExecutionRetriever>().Add<ExecutionRetriever>()
-               .Ctor<string>().Is(settings.BrainConnectionString);
-
-            config.For<IHeadRoomCalculator>().Use((HeadRoomCalculator)BAM.Infrastructure.Ioc.Container.Instance.Resolve(typeof(HeadRoomCalculator)));
-            config.For<IPositionSvc>().Use((PositionSvc)BAM.Infrastructure.Ioc.Container.Instance.Resolve(typeof(PositionSvc)));
-            config.For<IFirmPositionComplianceSvc>().Use((FirmPositionComplianceSvc)BAM.Infrastructure.Ioc.Container.Instance.Resolve(typeof(FirmPositionComplianceSvc)));
-            config.For<IFactSvc>().Use((FactSvc)BAM.Infrastructure.Ioc.Container.Instance.Resolve(typeof(FactSvc)));
-            config.For<IRuleSvc>().Use((RuleSvc)BAM.Infrastructure.Ioc.Container.Instance.Resolve(typeof(RuleSvc)));
         }
 
         protected virtual void ConfigureAuthorization(ConfigurationExpression config, ApiGatewaySettings settings, TimeSpan permissionRefresh = default(TimeSpan))
@@ -138,8 +123,7 @@ namespace Bam.Compliance.ApiGateway
 
             public object GetService(Type serviceType)
             {
-                return serviceType.Namespace != null && serviceType.Namespace.Contains("Bam.Oms.Compliance") 
-                    ? BAM.Infrastructure.Ioc.Container.Instance.Resolve(serviceType) : _container.TryGetInstance(serviceType);
+                return   _container.TryGetInstance(serviceType);
             }
 
             public IEnumerable<object> GetServices(Type serviceType)
@@ -168,8 +152,7 @@ namespace Bam.Compliance.ApiGateway
 
                 public object GetService(Type serviceType)
                 {
-                    return serviceType.Namespace != null && serviceType.Namespace.Contains("Bam.Oms")
-                    ? BAM.Infrastructure.Ioc.Container.Instance.Resolve(serviceType) : _container.GetInstance(serviceType);
+                    return   _container.GetInstance(serviceType);
                 }
 
                 public IEnumerable<object> GetServices(Type serviceType)

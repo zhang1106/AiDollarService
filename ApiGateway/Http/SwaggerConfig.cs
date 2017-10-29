@@ -1,12 +1,12 @@
 using System.Linq;
 using System.Web.Http;
-using Bam.Compliance.ApiGateway.Http;
+using AiDollar.ApiGateway.Http;
 using Swashbuckle.Application;
 using WebActivatorEx;
 
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 
-namespace Bam.Compliance.ApiGateway.Http
+namespace AiDollar.ApiGateway.Http
 {
     public class SwaggerConfig
     {
@@ -15,7 +15,7 @@ namespace Bam.Compliance.ApiGateway.Http
             configuration
                 .EnableSwagger(c =>
                     {
-                        c.SingleApiVersion("v1", "Bam.Compliance.ApiGateway");
+                        c.SingleApiVersion("v1", "AiDollar.ApiGateway");
                         
                         c.ApiKey("Bearer")
                             .Description("Filling bearer token here")

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Bam.Compliance.Infrastructure.Logger;
-using Bam.Compliance.Infrastructure.Permissions;
+using AiDollar.Infrastructure.Logger;
+using AiDollar.Infrastructure.Permissions;
 
-namespace Bam.Compliance.ApiGateway.Http.Controller
+namespace AiDollar.ApiGateway.Http.Controller
 {
     public abstract class BaseController : ApiController
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bam.Compliance.ApiGateway.Models
+namespace AiDollar.ApiGateway.Models
 {
     public class AccessToken
     {

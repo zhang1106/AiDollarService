@@ -2,7 +2,7 @@
 using System.Web.Http.Dependencies;
 using Microsoft.Owin.Hosting;
 
-namespace Bam.Compliance.ApiGateway.Http
+namespace AiDollar.ApiGateway.Http
 {
     public class HttpServiceOptions : StartOptions
     {

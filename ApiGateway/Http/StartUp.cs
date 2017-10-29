@@ -1,8 +1,8 @@
 ﻿using System.Net;
 using System.Web.Http;
 using System.Web.Http.ExceptionHandling;
-using Bam.Compliance.Infrastructure.Logger;
-using Bam.Compliance.Infrastructure.Permissions;
+using AiDollar.Infrastructure.Logger;
+using AiDollar.Infrastructure.Permissions;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.Owin;
@@ -12,7 +12,7 @@ using Microsoft.Owin.Security.OAuth;
 using Owin;
 using Owin.Security.AesDataProtectorProvider;
 
-namespace Bam.Compliance.ApiGateway.Http
+namespace AiDollar.ApiGateway.Http
 {
     public class StartUp
     {

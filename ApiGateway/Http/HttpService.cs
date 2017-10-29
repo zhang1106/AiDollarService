@@ -1,8 +1,8 @@
 ﻿using System;
-using Bam.Compliance.Infrastructure.Hosting;
+using AiDollar.Infrastructure.Hosting;
 using Microsoft.Owin.Hosting;
 
-namespace Bam.Compliance.ApiGateway.Http
+namespace AiDollar.ApiGateway.Http
 {
     public class HttpService : IService
     {

@@ -5,9 +5,9 @@ using System.Net.Http.Headers;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Bam.Compliance.Infrastructure.Permissions;
+using AiDollar.Infrastructure.Permissions;
 
-namespace Bam.Compliance.ApiGateway.Http.Controller
+namespace AiDollar.ApiGateway.Http.Controller
 {
     public class PermissionController : ApiController
     {
