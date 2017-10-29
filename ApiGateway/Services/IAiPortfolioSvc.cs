@@ -5,6 +5,6 @@ namespace Bam.Compliance.ApiGateway.Services
 {
     public interface  IAiPortfolioSvc
     {
-        IList<AiPortfolio> GetPortfolios(string cik);
+        AiPortfolio GetPortfolio(string cik);
     }
 }
