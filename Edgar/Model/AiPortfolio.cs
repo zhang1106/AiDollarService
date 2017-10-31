@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Bam.Compliance.ApiGateway.Models
+namespace AiDollar.Edgar.Model
 {
     public class AiPortfolio
     {

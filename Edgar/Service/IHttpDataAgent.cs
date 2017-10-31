@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Linq;
 
 namespace AiDollar.Edgar.Service

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AiDollar.Edgar.Service;
-using AiDollar.Edgar.Service.Model;
 using AiDollar.Infrastructure.Database;
 using MongoDB.Driver;
 using Newtonsoft.Json;

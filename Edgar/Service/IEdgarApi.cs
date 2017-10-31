@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using AiDollar.Edgar.Service.Model;
+using AiDollar.Edgar.Model;
 
 namespace AiDollar.Edgar.Service
 {

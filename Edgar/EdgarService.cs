@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Threading;
+using AiDollar.Edgar.Model;
 
 namespace AiDollar.Edgar.Service
 {
@@ -16,8 +17,10 @@ namespace AiDollar.Edgar.Service
         private readonly string _outputPath;
         private readonly string _posPage;
         private readonly IDbOperation _dbOperation;
+        private readonly IEdgarApi _edgarApi;
 
-        public EdgarService(IHttpDataAgent httpDataAgent, IUtil util, IDbOperation dbOperation, string[] ciks, string edgarUri, string posPage, 
+        public EdgarService(IHttpDataAgent httpDataAgent, IUtil util, IEdgarApi edgarApi,
+            IDbOperation dbOperation, string[] ciks, string edgarUri, string posPage, 
             string outputPath)
         {
             _httpDataAgent = httpDataAgent;
@@ -27,10 +30,11 @@ namespace AiDollar.Edgar.Service
             _outputPath = outputPath;
             _posPage = posPage;
             _dbOperation = dbOperation;
+            _edgarApi = edgarApi;
         }
         public void Start()
         {
-            while (true)
+            //while (true)
             {
                 foreach (var cik in _ciks)
                 {
@@ -73,8 +77,16 @@ namespace AiDollar.Edgar.Service
                     }
 
                 }
+
+                OutputAllPortfolios();
                 Thread.Sleep(60 * 60 * 1000);
             }
+        }
+
+        private void OutputAllPortfolios()
+        {
+            var ports = _ciks.Select(c => _edgarApi.GetPortfolios(c));
+            _util.WriteToDisk(_outputPath, JsonConvert.SerializeObject(ports));
         }
 
         private bool ReportExists(Portfolio portfolio)

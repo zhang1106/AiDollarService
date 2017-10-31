@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AiDollar.Edgar.Service
+namespace AiDollar.Edgar.Model
 {
     public class ShrsOrPrnAmt
     {

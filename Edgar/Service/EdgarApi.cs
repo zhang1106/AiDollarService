@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using AiDollar.Edgar.Service.Model;
+using AiDollar.Edgar.Model;
 using AiDollar.Infrastructure.Database;
 
 namespace AiDollar.Edgar.Service

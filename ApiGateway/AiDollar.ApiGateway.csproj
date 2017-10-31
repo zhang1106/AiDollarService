@@ -7,8 +7,8 @@
     <ProjectGuid>{1317EA69-AB62-4033-B4C3-3997C0A546AD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Bam.Compliance.ApiGateway</RootNamespace>
-    <AssemblyName>Bam.Compliance.ApiGateway</AssemblyName>
+    <RootNamespace>AiDollar.ApiGateway</RootNamespace>
+    <AssemblyName>AiDollar.ApiGateeay</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -220,11 +220,8 @@
     <Compile Include="Http\JsonNetFormatter.cs" />
     <Compile Include="Http\StartUp.cs" />
     <Compile Include="Models\AccessToken.cs" />
-    <Compile Include="Models\AiPortfolio.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RabbitMqSettings.cs" />
-    <Compile Include="Services\AiPortfolioSvc.cs" />
-    <Compile Include="Services\IAiPortfolioSvc.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -244,6 +241,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Services\" />
     <Folder Include="Sql\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

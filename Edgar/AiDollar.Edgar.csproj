@@ -52,18 +52,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompositionRoot.cs" />
-    <Compile Include="EdgarApi.cs" />
-    <Compile Include="EdgarEntry.cs" />
+    <Compile Include="Service\EdgarApi.cs" />
+    <Compile Include="Model\AiPortfolio.cs" />
+    <Compile Include="Model\EdgarEntry.cs" />
     <Compile Include="EdgarService.cs" />
-    <Compile Include="Holding.cs" />
-    <Compile Include="HttpDataAgent.cs" />
+    <Compile Include="Model\Holding.cs" />
+    <Compile Include="Service\HttpDataAgent.cs" />
     <Compile Include="EdgarSettings.cs" />
-    <Compile Include="IEdgarApi.cs" />
-    <Compile Include="IHttpDataAgent.cs" />
-    <Compile Include="IUtil.cs" />
+    <Compile Include="Service\IEdgarApi.cs" />
+    <Compile Include="Service\IHttpDataAgent.cs" />
+    <Compile Include="Service\IUtil.cs" />
     <Compile Include="Model\Security.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Util.cs" />
+    <Compile Include="Service\AiPortfolioSvc.cs" />
+    <Compile Include="Service\IAiPortfolioSvc.cs" />
+    <Compile Include="Service\Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

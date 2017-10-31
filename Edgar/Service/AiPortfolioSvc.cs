@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using AiDollar.Edgar.Service;
-using AiDollar.Edgar.Service.Model;
-using Bam.Compliance.ApiGateway.Models;
+using AiDollar.Edgar.Model;
 
-namespace Bam.Compliance.ApiGateway.Services
+namespace AiDollar.Edgar.Service
 {
     public class AiPortfolioSvc:IAiPortfolioSvc
     {
