@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompositionRoot.cs" />
+    <Compile Include="Model\Guru.cs" />
     <Compile Include="Service\EdgarApi.cs" />
     <Compile Include="Model\AiPortfolio.cs" />
     <Compile Include="Model\EdgarEntry.cs" />

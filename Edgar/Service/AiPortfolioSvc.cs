@@ -22,7 +22,9 @@ namespace AiDollar.Edgar.Service
 
         public AiPortfolio GetPortfolio(string cik)
         {
+            Console.WriteLine($"Calc portfolio for {cik}");
             var portfolios = _edgarApi.GetPortfolios(cik);
+            if (!portfolios.Any()) return null;
             var entries = portfolios.SelectMany(p => 
                 p.infoTable.GroupBy(g=>new{g.cusip, g.nameOfIssuer}).Select(g=>new { p.ReportedDate, cusip = g.Key,
                     Shares = g.Sum(i=>long.Parse(i.shrsOrPrnAmt.sshPrnamt))}))

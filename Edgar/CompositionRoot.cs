@@ -3,7 +3,6 @@ using AiDollar.Infrastructure.Hosting;
 using AiDollar.Infrastructure.Logger;
 using AiDollar.Infrastructure.Threading;
 using StructureMap;
-using StructureMap.Building;
 
 namespace AiDollar.Edgar.Service
 {
@@ -25,6 +24,8 @@ namespace AiDollar.Edgar.Service
 
                     config.For<IUtil>().Use<Util>();
 
+                    config.For<IAiPortfolioSvc>().Use<AiPortfolioSvc>();
+
                     config.For<IEdgarApi>().Use<EdgarApi>()
                         .Ctor<string>("connectionString").Is(settings.AiDollarMongo)
                         .Ctor<string>("database").Is(settings.AiDollarDb);
@@ -34,12 +35,9 @@ namespace AiDollar.Edgar.Service
                     .Ctor<string>("database").Is(settings.AiDollarDb);
 
                     config.For<IService>().Use<EdgarService>()
-                        .Ctor<string[]>("ciks").Is(settings.Ciks)
                         .Ctor<string>("edgarUri").Is(settings.EdgarArchiveRoot)
                         .Ctor<string>("outputPath").Is(settings.DataPath)
                         .Ctor<string>("posPage").Is(settings.PosPage);
-
-                   
 
                 }
             );

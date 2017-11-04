@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AiDollar.Edgar.Model;
+using AiDollar.Edgar.Service.Model;
 using AiDollar.Infrastructure.Database;
 
 namespace AiDollar.Edgar.Service
@@ -28,6 +29,13 @@ namespace AiDollar.Edgar.Service
             var db = new MongoDbOperation(_connectionString, _database);
             var securities = db.Select<Security>("{}").ToList();
             return securities;
+        }
+
+        public IList<Guru> GetGurus()
+        {
+            var db = new MongoDbOperation(_connectionString, _database);
+            var gurus = db.Select<Guru>("{}").ToList();
+            return gurus;
         }
     }
 }
