@@ -5,6 +5,7 @@ namespace AiDollar.Edgar.Model
 {
     public class AiPortfolio
     {
+        public string Cik { get; set; }
         public string Owner { get; set; }
         public DateTime ReportedDate0 { get; set; }
         public DateTime ReportedDate1 { get; set; }

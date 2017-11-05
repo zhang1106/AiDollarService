@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using AiDollar.Edgar.Model;
+using AiDollar.Edgar.Service.Model;
 
 namespace AiDollar.Edgar.Service
 {
@@ -110,15 +111,19 @@ namespace AiDollar.Edgar.Service
         {
             var gurus = _edgarApi.GetGurus();
             var ports = new List<AiPortfolio>();
+            var guruWithData = new List<Guru>();
             foreach (var g in gurus)
             {
                 Console.Write($"Calc for {g.Cik}");
                 var p = _aiPortfolioSvc.GetPortfolio(g.Cik.ToString());
-                if(p!=null) ports.Add(p);
+                if (p == null) continue;
 
+                ports.Add(p);
+                guruWithData.Add(g);
             }
              
             _util.WriteToDisk(_outputPath+"portfolios.json", JsonConvert.SerializeObject(ports));
+            _util.WriteToDisk(_outputPath+"guru.json", JsonConvert.SerializeObject(guruWithData.OrderBy(g=>g.Rank)));
         }
 
         private bool ReportExists(Portfolio portfolio)

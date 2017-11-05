@@ -32,6 +32,7 @@ namespace AiDollar.Edgar.Service
             var dates = entries.Select(e => e.ReportedDate).Distinct().OrderByDescending(d=>d).ToList();
             var portfolio = new AiPortfolio()
             {
+                Cik = cik,
                 Owner = portfolios[0].Holder,
                 ReportedDate4 = dates.Count>0?dates[0]:default(DateTime),
                 ReportedDate3 = dates.Count > 1 ? dates[1] : default(DateTime),
