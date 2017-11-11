@@ -9,7 +9,7 @@ namespace AiDollar.Edgar.Service.Model
     public class AiSecurityHoldingUnit
     {
         public string Owner { get; set; }
-        public string Fund { get; set; }
+        public string Cik { get; set; }
         public long Recent { get; set; }
         public long Q1 { get; set; }
         public long Q2 { get; set; }

@@ -12,12 +12,13 @@ namespace AiDollar.Edgar.Service
         public AiPortfolioSvc(IEdgarApi edgarApi)
         {
             _edgarApi = edgarApi;
-            _securities = _edgarApi.GetSecurities().ToLookup(s=>s.GetCusip(), s=>s);
+            _securities = _edgarApi.GetSecurities().ToLookup(s=>s.Cusip.TrimStart(new []{'0'}), s=>s);
         }
 
         public Security GetSecurity(string cusip)
         {
-            return _securities.Contains(cusip)? _securities[cusip].OrderBy(s=>s.Ticker.Length).FirstOrDefault():null;
+            var c = cusip.TrimStart(new[] {'0'});
+            return _securities.Contains(c)? _securities[c].OrderBy(s=>s.Ticker.Length).FirstOrDefault():null;
         }
 
         public AiPortfolio GetPortfolio(string cik)

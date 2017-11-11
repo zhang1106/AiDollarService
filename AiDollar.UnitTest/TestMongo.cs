@@ -40,18 +40,10 @@ namespace AiDollar.UnitTest
             var db = new MongoDbOperation("mongodb://localhost:27017", "AiDollar");
             var c = db.Database.GetCollection<Security>("Security");
              
-            var ports = db.Select<Security>("{'Ticker':{$ne:'*'}}").ToList();
+            var securities = db.Select<Security>("{'Ticker':'Ticker'}").ToList();
 
         }
 
-        [Test]
-        public void TestCusip()
-        {
-            var s = new Security()
-            {
-                Isin = "US01023E1001"
-            };
-            Assert.IsTrue(s.GetCusip()== "01023E100");
-        }
+        
     }
 }

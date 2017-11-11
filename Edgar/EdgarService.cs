@@ -135,6 +135,7 @@ namespace AiDollar.Edgar.Service
                 Holding = g.Select(a => new AiSecurityHoldingUnit()
                     {
                         Owner = a.Owner,
+                        Cik = a.Cik,
                         Recent = a.Port.Share4,
                         Q1 = a.Port.Share3,
                         Q2 = a.Port.Share2,
