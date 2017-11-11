@@ -122,8 +122,32 @@ namespace AiDollar.Edgar.Service
                 guruWithData.Add(g);
             }
              
+            //security
+            var holdings = ports.SelectMany(p => p.Holdings.Select(Port=>new {p.Owner, p.Cik, Port}));
+
+            var group = holdings.GroupBy(h => new { h.Port.Issuer , h.Port.Cusip, h.Port.Ticker});
+
+            var sHoldings = group.Select(g => new AiSecurityHolding()
+            {
+                Ticker = g.Key.Ticker, 
+                Issuer = g.Key.Issuer,
+                Cusip = g.Key.Cusip,
+                Holding = g.Select(a => new AiSecurityHoldingUnit()
+                    {
+                        Owner = a.Owner,
+                        Recent = a.Port.Share4,
+                        Q1 = a.Port.Share3,
+                        Q2 = a.Port.Share2,
+                        Q3 = a.Port.Share1,
+                        Q4 = a.Port.Share0
+                    }
+                ).OrderByDescending(h=>h.Recent).ToList(),
+               }).OrderByDescending(s=>s.Holding.Count);
+             
             _util.WriteToDisk(_outputPath+"portfolios.json", JsonConvert.SerializeObject(ports));
-            _util.WriteToDisk(_outputPath+"guru.json", JsonConvert.SerializeObject(guruWithData.OrderBy(g=>g.Rank)));
+            _util.WriteToDisk(_outputPath+"guru.json", 
+                JsonConvert.SerializeObject(guruWithData.OrderBy(g=>g.Rank).Select(g=>new{g.Cik,g.Owner,g.Fund})));
+            _util.WriteToDisk(_outputPath+"securityHolding.json", JsonConvert.SerializeObject(sHoldings));
         }
 
         private bool ReportExists(Portfolio portfolio)

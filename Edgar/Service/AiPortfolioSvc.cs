@@ -56,7 +56,7 @@ namespace AiDollar.Edgar.Service
                     Share3 = h.Count > 1 ? h[1] : 0,
                     Share4 = h.Count > 0 ? h[0] : 0
                 };
-            portfolio.Holdings = aiPort.ToList();
+            portfolio.Holdings = aiPort.OrderByDescending(h=>h.Share4).ToList();
 
             return portfolio;
         }
