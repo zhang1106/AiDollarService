@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using AiDollar.Edgar.Model;
 using AiDollar.Edgar.Service.Model;
 
@@ -110,31 +109,32 @@ namespace AiDollar.Edgar.Service
         private void OutputAllPortfolios()
         {
             var gurus = _edgarApi.GetGurus();
+            var securities = _edgarApi.GetSecurities().ToLookup(s=>s.Cusip);
             var ports = new List<AiPortfolio>();
             var guruWithData = new List<Guru>();
             foreach (var g in gurus)
             {
                 Console.Write($"Calc for {g.Cik}");
-                var p = _aiPortfolioSvc.GetPortfolio(g.Cik.ToString());
+                var p = _aiPortfolioSvc.GetPortfolio(g.Cik);
                 if (p == null) continue;
-
+                p.Fund = p.Owner;
+                p.Owner = g.Owner;
                 ports.Add(p);
                 guruWithData.Add(g);
             }
-             
+            var pbyCik = ports.ToDictionary(p => p.Cik);
+
             //security
             var holdings = ports.SelectMany(p => p.Holdings.Select(Port=>new {p.Owner, p.Cik, Port}));
-
-            var group = holdings.GroupBy(h => new { h.Port.Issuer , h.Port.Cusip, h.Port.Ticker});
+            
+            var group = holdings.GroupBy(h => h.Port.Cusip);
 
             var sHoldings = group.Select(g => new AiSecurityHolding()
             {
-                Ticker = g.Key.Ticker, 
-                Issuer = g.Key.Issuer,
-                Cusip = g.Key.Cusip,
+                Cusip = g.Key ,
                 Holding = g.Select(a => new AiSecurityHoldingUnit()
                     {
-                        Owner = a.Owner,
+                        Owner =  a.Owner,
                         Cik = a.Cik,
                         Recent = a.Port.Share4,
                         Q1 = a.Port.Share3,
@@ -144,11 +144,23 @@ namespace AiDollar.Edgar.Service
                     }
                 ).OrderByDescending(h=>h.Recent).ToList(),
                }).OrderByDescending(s=>s.Holding.Count);
-             
-            _util.WriteToDisk(_outputPath+"portfolios.json", JsonConvert.SerializeObject(ports));
+            
+            var hashSHoldings = sHoldings.ToDictionary(s => s.Cusip);
+            var top25 = sHoldings.Take(50);
+
+            var security =  top25.Where(t=>securities[t.Cusip].FirstOrDefault()?.SecurityDesc != null)
+                .Select(h => new {Issuer=securities[h.Cusip].FirstOrDefault()?.SecurityDesc, h.Cusip, securities[h.Cusip].FirstOrDefault()?.Ticker,});
+
+            var tickerToCusip = security.Where(s => !string.IsNullOrEmpty(s.Ticker))
+                .Select(s => new {s.Ticker, s.Cusip}).Distinct();
+
+            _util.WriteToDisk(_outputPath+"holdByCik.json", JsonConvert.SerializeObject(pbyCik));
             _util.WriteToDisk(_outputPath+"guru.json", 
                 JsonConvert.SerializeObject(guruWithData.OrderBy(g=>g.Rank).Select(g=>new{g.Cik,g.Owner,g.Fund})));
-            _util.WriteToDisk(_outputPath+"securityHolding.json", JsonConvert.SerializeObject(sHoldings));
+            _util.WriteToDisk(_outputPath+"holdByCusip.json", JsonConvert.SerializeObject(hashSHoldings));
+            _util.WriteToDisk(_outputPath + "security.json", JsonConvert.SerializeObject(security));
+            _util.WriteToDisk(_outputPath + "tickerToCusip.json", JsonConvert.SerializeObject(tickerToCusip));
+            
         }
 
         private bool ReportExists(Portfolio portfolio)

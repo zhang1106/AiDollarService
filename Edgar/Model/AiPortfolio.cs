@@ -7,6 +7,7 @@ namespace AiDollar.Edgar.Model
     {
         public string Cik { get; set; }
         public string Owner { get; set; }
+        public string Fund { get; set; }
         public DateTime ReportedDate0 { get; set; }
         public DateTime ReportedDate1 { get; set; }
         public DateTime ReportedDate2 { get; set; }
