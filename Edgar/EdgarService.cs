@@ -151,8 +151,8 @@ namespace AiDollar.Edgar.Service
             var security =  top25.Where(t=>securities[t.Cusip].FirstOrDefault()?.SecurityDesc != null)
                 .Select(h => new {Issuer=securities[h.Cusip].FirstOrDefault()?.SecurityDesc, h.Cusip, securities[h.Cusip].FirstOrDefault()?.Ticker,});
 
-            var tickerToCusip = security.Where(s => !string.IsNullOrEmpty(s.Ticker))
-                .Select(s => new {s.Ticker, s.Cusip}).Distinct();
+            var tickerToCusip = holdings.Where(s => !string.IsNullOrEmpty(s.Port.Ticker))
+                .Select(s => new {s.Port.Ticker, s.Port.Cusip}).Distinct().ToDictionary(s=>s.Ticker, s=>s.Cusip);
 
             _util.WriteToDisk(_outputPath+"holdByCik.json", JsonConvert.SerializeObject(pbyCik));
             _util.WriteToDisk(_outputPath+"guru.json", 
