@@ -34,15 +34,13 @@ namespace AiDollar.Edgar.Service.Service
                 var f4 = GetF4Report(idx.URL);
                 Logger.LogInformation($"F4xml: Get {idx.URL}");
                 Console.WriteLine($"F4xml: Get {idx.URL}");
-                if (f4 != null)
-                {
-                    var trans = f4.ownershipDocument.nonDerivativeTable.GetNonDerivativeTransaction();
-                    Console.WriteLine($"transact code:{trans.transactionCoding}");
-                    if(trans.transactionCoding.transactionCode=="S" || trans.transactionCoding.transactionCode == "P")
-                        f4Activities.Add(f4);
-                }
 
-                if (f4Activities.Count > 5) break;
+                if (f4 == null) continue;
+
+                var trans = f4.ownershipDocument?.nonDerivativeTable?.GetNonDerivativeTransaction();
+                Console.WriteLine($"transact code:{trans?.transactionCoding}");
+                if(trans?.transactionCoding.transactionCode=="S" || trans?.transactionCoding.transactionCode == "P")
+                    f4Activities.Add(f4);
             }
             
             var latest = f4Activities.Select(GetInsideTrade);
@@ -54,7 +52,7 @@ namespace AiDollar.Edgar.Service.Service
             var desc = _edgarIdxSvc.DownLoadEdgarIdx();
             var idxes = _edgarIdxSvc.Parse(desc);
             var f4s = idxes
-                .Where(e => e.FormType == "4" && DateTime.Now.Subtract(e.DateFiled).Days > days);
+                .Where(e => e.FormType == "4" && DateTime.Now.Subtract(e.DateFiled).Days < days);
             return f4s;
         }
 

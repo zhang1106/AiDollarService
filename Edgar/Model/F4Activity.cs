@@ -177,13 +177,13 @@ namespace AiDollar.Edgar.Service.Model
 
         public dynamic GetNonDerivativeTransaction()
         {
-            return (nonDerivativeTransaction.GetType().Name ==  "JArray" ? nonDerivativeTransaction[0] : nonDerivativeTransaction);
+            return (nonDerivativeTransaction?.GetType().Name ==  "JArray" ? nonDerivativeTransaction[0] : nonDerivativeTransaction);
             //return nonDerivativeTransactionList == null ? nonDerivativeTransaction : nonDerivativeTransactionList[0];
         }
 
         public dynamic GetNonDerivativeHolding()
         {
-            return (nonDerivativeHolding.GetType().Name == "JArray" ? nonDerivativeHolding[0] : nonDerivativeHolding);
+            return (nonDerivativeHolding?.GetType().Name == "JArray" ? nonDerivativeHolding[0] : nonDerivativeHolding);
             //return nonDerivativeHoldingList == null ? nonDerivativeHolding : nonDerivativeHoldingList[0];
         }
     }
