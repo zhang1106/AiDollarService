@@ -53,15 +53,24 @@
   <ItemGroup>
     <Compile Include="CompositionRoot.cs" />
     <Compile Include="Model\AiSecurity.cs" />
+    <Compile Include="Model\EdgarIdx.cs" />
+    <Compile Include="Model\F4Activity.cs" />
     <Compile Include="Model\Guru.cs" />
     <Compile Include="Service\EdgarApi.cs" />
     <Compile Include="Model\AiPortfolio.cs" />
     <Compile Include="Model\EdgarEntry.cs" />
     <Compile Include="EdgarService.cs" />
     <Compile Include="Model\Holding.cs" />
+    <Compile Include="Service\EdgarIdxDesc.cs" />
+    <Compile Include="Service\EdgarIdxSvc.cs" />
+    <Compile Include="Service\F13Svc.cs" />
+    <Compile Include="Service\F4Svc.cs" />
     <Compile Include="Service\HttpDataAgent.cs" />
     <Compile Include="EdgarSettings.cs" />
+    <Compile Include="Service\IF13Svc.cs" />
     <Compile Include="Service\IEdgarApi.cs" />
+    <Compile Include="Service\IEdgarIdxSvc.cs" />
+    <Compile Include="Service\IF4Svc.cs" />
     <Compile Include="Service\IHttpDataAgent.cs" />
     <Compile Include="Service\IUtil.cs" />
     <Compile Include="Model\Security.cs" />

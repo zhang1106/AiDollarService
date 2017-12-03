@@ -1,12 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace AiDollar.Edgar.Service
 {
     public interface IHttpDataAgent
     {
-         Task<byte[]> DownloadPageAsync(string page);
+        Task<byte[]> DownloadPageAsync(string page);
 
-         XDocument DownloadXml(string page);
+        XDocument DownloadXml(string page);
+
+        string Download(string page);
+   
     }
 }

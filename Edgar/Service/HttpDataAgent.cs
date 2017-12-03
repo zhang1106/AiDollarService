@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
@@ -18,13 +19,21 @@ namespace AiDollar.Edgar.Service
                 var result = await content.ReadAsByteArrayAsync();
 
                 return result;
-
             }
         }
 
         public XDocument DownloadXml(string page)
         {
             return XDocument.Load(page);
+        }
+
+        public string Download(string page)
+        {
+            using (var client = new WebClient())
+            {
+                var content = client.DownloadString(page);
+                return content;
+            }
         }
 
     }

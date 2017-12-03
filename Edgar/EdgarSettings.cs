@@ -10,6 +10,11 @@ namespace AiDollar.Edgar.Service
         public string PosPage { get { return GetValue(() => PosPage); } }
         public string AiDollarMongo { get { return GetValue(() => AiDollarMongo); } }
         public string AiDollarDb { get { return GetValue(() => AiDollarDb); } }
+        public string EdgarCrawlerUri { get { return GetValue(() => EdgarCrawlerUri); } }
+        public int NumHeaderlines { get { return GetValue(() => NumHeaderlines); } }
+        public int F4InDays {
+            get { return GetValue(() => F4InDays); }
+        }
 
     }
 }
