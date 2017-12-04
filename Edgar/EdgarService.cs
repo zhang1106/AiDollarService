@@ -21,12 +21,12 @@ namespace AiDollar.Edgar.Service
 
         public void Start()
         {
-           DownloadF4();
+           GenerateF4();
         }
 
-        private void DownloadF4()
+        private void GenerateF4()
         {
-            var trades = _f4Svc.DownloadLatestInsideTrades(_f4InDays);
+            var trades = _f4Svc.GetLatestInsideTrades(_f4InDays);
             _util.WriteToDisk(_outputPath+"f4.json", JsonConvert.SerializeObject(trades));
         }
        

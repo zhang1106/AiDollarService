@@ -11,18 +11,27 @@ namespace AiDollar.Edgar.Service.Service
     public class F4Svc : IF4Svc
     {
         private readonly IEdgarIdxSvc _edgarIdxSvc;
-        //
         private readonly IHttpDataAgent _httpDataAgent;
-      
         private readonly IUtil _util;
+        private readonly IAiDbSvc _aiDbSvc;
+
 
         public ILogger Logger { get; set; }
 
-        public F4Svc(IEdgarIdxSvc edgarIdxSvc, IHttpDataAgent httpDataAgent, IUtil util)
+        public F4Svc(IEdgarIdxSvc edgarIdxSvc, IHttpDataAgent httpDataAgent, IUtil util, IAiDbSvc aiDbSvc)
         {
             _edgarIdxSvc = edgarIdxSvc;
             _httpDataAgent = httpDataAgent;
             _util = util;
+            _aiDbSvc = aiDbSvc;
+        }
+
+        public IEnumerable<InsideTrade> GetLatestInsideTrades(int days)
+        {
+            var trades = _aiDbSvc.GetInsideTrades();
+            var selected = trades.Where(t=>(DateTime.Now.Subtract(DateTime.Parse(t.TransactionDate)).Days<days) && 
+            (decimal.Parse(t.Amount) > 10000 || decimal.Parse(t.Amount)/ (decimal.Parse(t.Amount)+decimal.Parse(t.RemainAmount))>0.1m));
+            return selected;
         }
 
         public IEnumerable<InsideTrade> DownloadLatestInsideTrades(int days)
