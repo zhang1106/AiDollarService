@@ -12,14 +12,14 @@ namespace AiDollar.Edgar.Service.Service
     {
         private readonly IAiPortfolioSvc _aiPortfolioSvc;
         private readonly IDbOperation _dbOperation;
-        private readonly IEdgarApi _edgarApi;
+        private readonly IAiDbSvc _aiDbSvc;
         private readonly string _edgarUri;
         private readonly IHttpDataAgent _httpDataAgent;
        
         private readonly string _posPage;
         private readonly IUtil _util;
 
-        public F13Svc(IHttpDataAgent httpDataAgent, IUtil util, IEdgarApi edgarApi, IAiPortfolioSvc aiPortfolioSvc,
+        public F13Svc(IHttpDataAgent httpDataAgent, IUtil util, IAiDbSvc aiDbSvc, IAiPortfolioSvc aiPortfolioSvc,
             IDbOperation dbOperation, string edgarUri, string posPage)
         {
             _httpDataAgent = httpDataAgent;
@@ -29,12 +29,12 @@ namespace AiDollar.Edgar.Service.Service
             
             _posPage = posPage;
             _dbOperation = dbOperation;
-            _edgarApi = edgarApi;
+            _aiDbSvc = aiDbSvc;
         }
 
         public void GetLatest13F(string outputPath)
         {
-            var gurus = _edgarApi.GetGurus();
+            var gurus = _aiDbSvc.GetGurus();
 
             foreach (var guru in gurus)
             {
@@ -92,8 +92,8 @@ namespace AiDollar.Edgar.Service.Service
 
         private void OutputAllPortfolios(string outputPath)
         {
-            var gurus = _edgarApi.GetGurus();
-            var securities = _edgarApi.GetSecurities().ToLookup(s => s.Cusip);
+            var gurus = _aiDbSvc.GetGurus();
+            var securities = _aiDbSvc.GetSecurities().ToLookup(s => s.Cusip);
             var ports = new List<AiPortfolio>();
             var guruWithData = new List<Guru>();
             foreach (var g in gurus)

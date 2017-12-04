@@ -5,7 +5,7 @@ namespace AiDollar.Edgar.Service.Service
 {
     public interface IF4Svc
     {
-       IEnumerable<InsideTrade> GetlatestInsideTrades(int days);
+       IEnumerable<InsideTrade> DownloadLatestInsideTrades(int days);
    
     }
 }

@@ -25,7 +25,7 @@ namespace AiDollar.Edgar.Service.Service
             _util = util;
         }
 
-        public IEnumerable<InsideTrade> GetlatestInsideTrades(int days)
+        public IEnumerable<InsideTrade> DownloadLatestInsideTrades(int days)
         {
             var latestF4 = GetLatestF4Idx(days);
             var f4Activities = new List<F4Activity>();

@@ -26,7 +26,7 @@ namespace AiDollar.Edgar.Service
 
         private void DownloadF4()
         {
-            var trades = _f4Svc.GetlatestInsideTrades(_f4InDays);
+            var trades = _f4Svc.DownloadLatestInsideTrades(_f4InDays);
             _util.WriteToDisk(_outputPath+"f4.json", JsonConvert.SerializeObject(trades));
         }
        

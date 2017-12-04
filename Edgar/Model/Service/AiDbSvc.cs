@@ -6,17 +6,17 @@ using AiDollar.Infrastructure.Database;
 
 namespace AiDollar.Edgar.Service
 {
-    public class EdgarApi:IEdgarApi
+    public class AiDbSvc:IAiDbSvc
     {
         private readonly string _connectionString;
         private readonly string _database;
 
-        public EdgarApi(string connectionString, string database)
+        public AiDbSvc(string connectionString, string database)
         {
             _connectionString = connectionString;
             _database = database;
         }
-        public IList<Portfolio> GetPortfolios(string cik)
+        public IEnumerable<Portfolio> GetPortfolios(string cik)
         {
             var db = new MongoDbOperation(_connectionString, _database);
             var qry = "{'Cik':'"+cik+"'}";
@@ -24,18 +24,25 @@ namespace AiDollar.Edgar.Service
             return ports;
         }
 
-        public IList<Security> GetSecurities()
+        public IEnumerable<Security> GetSecurities()
         {
             var db = new MongoDbOperation(_connectionString, _database);
             var securities = db.Select<Security>("{}").ToList();
             return securities;
         }
 
-        public IList<Guru> GetGurus()
+        public IEnumerable<Guru> GetGurus()
         {
             var db = new MongoDbOperation(_connectionString, _database);
             var gurus = db.Select<Guru>("{}").ToList();
             return gurus;
+        }
+
+        public IEnumerable<InsideTrade> GetInsideTrades()
+        {
+            var db = new MongoDbOperation(_connectionString, _database);
+            var trades = db.Select<InsideTrade>("{}").ToList();
+            return trades;
         }
     }
 }

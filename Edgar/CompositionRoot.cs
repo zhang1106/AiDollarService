@@ -26,7 +26,7 @@ namespace AiDollar.Edgar.Service
 
                     config.For<IAiPortfolioSvc>().Use<AiPortfolioSvc>();
 
-                    config.For<IEdgarApi>().Use<EdgarApi>()
+                    config.For<IAiDbSvc>().Use<AiDbSvc>()
                         .Ctor<string>("connectionString").Is(settings.AiDollarMongo)
                         .Ctor<string>("database").Is(settings.AiDollarDb);
 

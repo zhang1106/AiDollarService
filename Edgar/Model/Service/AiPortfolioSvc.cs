@@ -6,13 +6,13 @@ namespace AiDollar.Edgar.Service
 {
     public class AiPortfolioSvc:IAiPortfolioSvc
     {
-        private readonly IEdgarApi _edgarApi;
+        private readonly IAiDbSvc _aiDbSvc;
         private readonly ILookup<string, Security> _securities;
 
-        public AiPortfolioSvc(IEdgarApi edgarApi)
+        public AiPortfolioSvc(IAiDbSvc aiDbSvc)
         {
-            _edgarApi = edgarApi;
-            _securities = _edgarApi.GetSecurities().ToLookup(s=>s.Cusip.TrimStart(new []{'0'}), s=>s);
+            _aiDbSvc = aiDbSvc;
+            _securities = _aiDbSvc.GetSecurities().ToLookup(s=>s.Cusip.TrimStart(new []{'0'}), s=>s);
         }
 
         public Security GetSecurity(string cusip)
@@ -24,7 +24,7 @@ namespace AiDollar.Edgar.Service
         public AiPortfolio GetPortfolio(string cik)
         {
             Console.WriteLine($"Calc portfolio for {cik}");
-            var portfolios = _edgarApi.GetPortfolios(cik);
+            var portfolios = _aiDbSvc.GetPortfolios(cik).ToList();
             if (!portfolios.Any()) return null;
             var entries = portfolios.SelectMany(p => 
                 p.infoTable.GroupBy(g=>new{g.cusip, g.nameOfIssuer}).Select(g=>new { p.ReportedDate, cusip = g.Key,

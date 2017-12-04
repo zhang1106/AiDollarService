@@ -1,15 +1,15 @@
-﻿using AiDollar.Infrastructure.Logger;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using AiDollar.Infrastructure.Logger;
+using Newtonsoft.Json;
 
 namespace AiDollar.Edgar.Service
 {
-    public class Util:IUtil
+    public class Util : IUtil
     {
         public ILogger Logger { get; set; }
 
@@ -21,7 +21,7 @@ namespace AiDollar.Edgar.Service
             var serialized = builder.ToString();
             return serialized;
         }
-        
+
         public string ToJson(string xml)
         {
             var doc = new XmlDocument();
@@ -50,36 +50,32 @@ namespace AiDollar.Edgar.Service
             return xdoc;
         }
 
-       
 
         public void WriteToDisk(string path, string data)
         {
             try
             {
-                System.IO.File.WriteAllText(path,  data);
+                File.WriteAllText(path, data);
             }
             catch (Exception e)
             {
-              Logger.LogError(e.Message + e.StackTrace);
+                Logger.LogError(e.Message + e.StackTrace);
             }
         }
     }
 
     public class CustomJsonWriter : JsonTextWriter
     {
-        public CustomJsonWriter(TextWriter writer) : base(writer) { }
+        public CustomJsonWriter(TextWriter writer) : base(writer)
+        {
+        }
 
         public override void WritePropertyName(string name)
         {
             if (name.StartsWith("@") || name.StartsWith("#"))
-            {
                 base.WritePropertyName(name.Substring(1));
-            }
             else
-            {
                 base.WritePropertyName(name);
-            }
         }
     }
 }
- 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+﻿using System.Collections.Generic;
 
 namespace AiDollar.Edgar.Service.Model
 {
@@ -170,21 +168,18 @@ namespace AiDollar.Edgar.Service.Model
 
     public class NonDerivativeTable
     {
-        //public dynamic nonDerivativeTransactionList { get; set; }
-        //public dynamic nonDerivativeHoldingList { get; set; }
+      
         public dynamic nonDerivativeTransaction { get; set; }
         public dynamic nonDerivativeHolding { get; set; }
 
         public dynamic GetNonDerivativeTransaction()
         {
             return (nonDerivativeTransaction?.GetType().Name ==  "JArray" ? nonDerivativeTransaction[0] : nonDerivativeTransaction);
-            //return nonDerivativeTransactionList == null ? nonDerivativeTransaction : nonDerivativeTransactionList[0];
         }
 
         public dynamic GetNonDerivativeHolding()
         {
             return (nonDerivativeHolding?.GetType().Name == "JArray" ? nonDerivativeHolding[0] : nonDerivativeHolding);
-            //return nonDerivativeHoldingList == null ? nonDerivativeHolding : nonDerivativeHoldingList[0];
         }
     }
 
@@ -225,6 +220,7 @@ namespace AiDollar.Edgar.Service.Model
 
     public class InsideTrade
     {
+        public object _id { get; set; }
         public string Issuer { get; set; }
         public string Symbol { get; set; }
         public string Cik { get; set; }

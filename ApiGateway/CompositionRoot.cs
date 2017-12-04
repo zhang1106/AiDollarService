@@ -34,7 +34,7 @@ namespace AiDollar.ApiGateway
                         ConfigureLogger(config, _settings);
                         ConfigureRest(config, _settings);
                         var sRoot = Edgar.Service.CompositionRoot.CompositeRootInstanace();
-                        config.For<IEdgarApi>().Use(sRoot.GetInstance<IEdgarApi>());
+                        config.For<IAiDbSvc>().Use(sRoot.GetInstance<IAiDbSvc>());
                         config.For<IAiPortfolioSvc>().Use((AiPortfolioSvc)sRoot.GetInstance<IAiPortfolioSvc>());
                     }
                 );
