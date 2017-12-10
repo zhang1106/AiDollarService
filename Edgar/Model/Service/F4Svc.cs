@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AiDollar.Edgar.Service.Model;
+using AiDollar.Infrastructure.Database;
 using AiDollar.Infrastructure.Logger;
 using Newtonsoft.Json;
 
@@ -14,27 +15,39 @@ namespace AiDollar.Edgar.Service.Service
         private readonly IHttpDataAgent _httpDataAgent;
         private readonly IUtil _util;
         private readonly IAiDbSvc _aiDbSvc;
-
-
+        private readonly IDbOperation _dbOperation;
+        
         public ILogger Logger { get; set; }
 
-        public F4Svc(IEdgarIdxSvc edgarIdxSvc, IHttpDataAgent httpDataAgent, IUtil util, IAiDbSvc aiDbSvc)
+        public F4Svc(IEdgarIdxSvc edgarIdxSvc, IHttpDataAgent httpDataAgent, IUtil util, IAiDbSvc aiDbSvc, IDbOperation dbOperation)
         {
             _edgarIdxSvc = edgarIdxSvc;
             _httpDataAgent = httpDataAgent;
             _util = util;
             _aiDbSvc = aiDbSvc;
+            _dbOperation = dbOperation;
         }
 
         public IEnumerable<InsideTrade> GetLatestInsideTrades(int days)
         {
             var trades = _aiDbSvc.GetInsideTrades();
             var selected = trades.Where(t=>(DateTime.Now.Subtract(DateTime.Parse(t.TransactionDate)).Days<days) && 
-            (decimal.Parse(t.Amount) > 10000 || decimal.Parse(t.Amount)/ (decimal.Parse(t.Amount)+decimal.Parse(t.RemainAmount))>0.1m));
+            (decimal.Parse(t.Amount) > 10000 && decimal.Parse(t.Amount)/ (decimal.Parse(t.Amount)+decimal.Parse(t.RemainAmount))>0.1m));
             return selected;
         }
 
         public IEnumerable<InsideTrade> DownloadLatestInsideTrades(int days)
+        {
+            var trades = DownloadLatestInsideTradesFromEdgar(days);
+            //save to db
+            var saved = _aiDbSvc.GetInsideTrades().ToLookup(t=>new {t.Issuer, t.Reporter,t.TransactionDate});
+            var toSave = trades.Where(t => !saved.Contains(new {t.Issuer, t.Reporter, t.TransactionDate}));
+           
+            _dbOperation.SaveItems(toSave, "InsideTrade");
+            return toSave.ToList();
+        }
+
+        public IEnumerable<InsideTrade> DownloadLatestInsideTradesFromEdgar(int days)
         {
             var latestF4 = GetLatestF4Idx(days);
             var f4Activities = new List<F4Activity>();
@@ -152,9 +165,10 @@ namespace AiDollar.Edgar.Service.Service
                 Reporter = activity.ownershipDocument.reportingOwner.reportingOwnerId.rptOwnerName,
                 Role = activity.ownershipDocument.reportingOwner.reportingOwnerRelationship.officerTitle,
                 TransactionCode = activity.ownershipDocument.nonDerivativeTable.GetNonDerivativeTransaction()
-                    .transactionCoding.transactionCode,
+                    .transactionCoding.transactionCode=="S"?"Sale":"Buy",
                 TransactionDate = activity.ownershipDocument.nonDerivativeTable.GetNonDerivativeTransaction().transactionDate
-                    .value
+                    .value,
+                _id = Guid.NewGuid()
             };
             return iTrade;
         }

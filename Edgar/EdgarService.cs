@@ -1,4 +1,5 @@
-﻿using AiDollar.Edgar.Service.Service;
+﻿using System.Linq;
+using AiDollar.Edgar.Service.Service;
 using AiDollar.Infrastructure.Hosting;
 using Newtonsoft.Json;
 
@@ -21,12 +22,17 @@ namespace AiDollar.Edgar.Service
 
         public void Start()
         {
+           var trades = _f4Svc.DownloadLatestInsideTrades(3);
+           _util.WriteToDisk(_outputPath+"f4trdes.json", JsonConvert.SerializeObject(trades));
            GenerateF4();
         }
 
         private void GenerateF4()
         {
-            var trades = _f4Svc.GetLatestInsideTrades(_f4InDays);
+            var trades = _f4Svc.GetLatestInsideTrades(_f4InDays)
+                .Select(f=>new{f.Issuer,f.Amount,f.Reporter,f.RemainAmount,f.Price,f.Symbol,f.Role,f.TransactionDate,f.TransactionCode})
+                .Distinct()
+                .OrderByDescending(f=>f.Issuer);
             _util.WriteToDisk(_outputPath+"f4.json", JsonConvert.SerializeObject(trades));
         }
        
