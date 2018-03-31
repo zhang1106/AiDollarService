@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using AiDollar.Edgar.Model;
 using AiDollar.Edgar.Service.Model;
 using AiDollar.Infrastructure.Database;
@@ -32,8 +33,18 @@ namespace AiDollar.Edgar.Service.Service
             _aiDbSvc = aiDbSvc;
         }
 
+        public void GetLatest13F(string outputPath, bool downloadNew)
+        {
+            if (downloadNew)
+            {
+                GetLatest13F(outputPath);
+                return;
+            }
+            OutputAllPortfolios(outputPath);
+        }
         public void GetLatest13F(string outputPath)
         {
+
             var gurus = _aiDbSvc.GetGurus();
 
             foreach (var guru in gurus)
@@ -60,7 +71,7 @@ namespace AiDollar.Edgar.Service.Service
                         var posIdxPage = entry.content.accession_nunber + "-index.htm";
                         var link = entry.link.href.Replace(posIdxPage, _posPage);
 
-                        var jPos = DownloadLatestPosition(link);
+                        var jPos = TryDownloadLatestPosition(link);
 
                         if (jPos == null) continue;
 
@@ -140,8 +151,14 @@ namespace AiDollar.Edgar.Service.Service
                     securities[h.Cusip].FirstOrDefault()?.Ticker
                 });
 
-            var tickerToCusip = holdings.Where(s => !string.IsNullOrEmpty(s.Port.Ticker))
-                .Select(s => new {s.Port.Ticker, s.Port.Cusip}).Distinct().ToDictionary(s => s.Ticker, s => s.Cusip);
+            var tickerToCusip = new Dictionary<string, string>();
+            foreach (var h in holdings.Where(s => !string.IsNullOrEmpty(s.Port.Ticker)))
+            {
+                if (tickerToCusip.ContainsKey(h.Port.Ticker))
+                {
+                    tickerToCusip.Add(h.Port.Ticker, h.Port.Cusip);
+                }
+            } 
 
             _util.WriteToDisk(outputPath + "holdByCik.json", JsonConvert.SerializeObject(pbyCik));
             _util.WriteToDisk(outputPath + "guru.json",
@@ -157,6 +174,20 @@ namespace AiDollar.Edgar.Service.Service
             var query = $"{{'_id':'{portfolio._id}'}}";
             var portfolios = _dbOperation.Select<Portfolio>(query);
             return portfolios.Any();
+        }
+
+        public string TryDownloadLatestPosition(string uri)
+        {
+            try
+            {
+                return DownloadLatestPosition(uri);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("cant downlpad " + uri + " try infotable.xml.");
+                var tryUri = uri.Replace(_posPage, "infotable.xml");
+                return DownloadLatestPosition(tryUri);
+            }
         }
 
         public string DownloadLatestPosition(string uri)
